@@ -212,7 +212,9 @@ function OrderDetails() {
           <div className="summary-row">
             <span>Items</span>
 
-            <span>{items.length}</span>
+            <span>
+  {items.reduce((total, item) => total + item.quantity, 0)}
+</span>
           </div>
 
           <div className="summary-row">
