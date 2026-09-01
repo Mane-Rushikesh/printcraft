@@ -28,7 +28,7 @@ function AdminOrders() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/orders/admin/all",
+        "https://printcraft-backend.onrender.com/api/orders/admin/all",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ function AdminOrders() {
       setUpdating(orderId);
 
       const response = await fetch(
-        `http://localhost:5000/api/orders/admin/${orderId}/status`,
+        `http:/https://printcraft-backend.onrender.com/api/orders/admin/${orderId}/status`,
         {
           method: "PUT",
 

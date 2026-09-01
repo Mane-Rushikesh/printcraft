@@ -31,7 +31,7 @@ function AdminProducts() {
 
   const token = localStorage.getItem("token");
 
-  const API_URL = "http://localhost:5000/api/products";
+  const API_URL = "https://printcraft-backend.onrender.com/api/products";
 
   // ===============================
   // FETCH PRODUCTS

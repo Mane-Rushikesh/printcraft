@@ -18,7 +18,7 @@ function MyOrders() {
        const token = localStorage.getItem("token");
 
 const response = await fetch(
-  `http://localhost:5000/api/orders/user/${user.id}`,
+  `https://printcraft-backend.onrender.com/api/orders/user/${user.id}`,
   {
     headers: {
       Authorization: `Bearer ${token}`,
