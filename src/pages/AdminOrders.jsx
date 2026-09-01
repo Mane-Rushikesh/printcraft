@@ -78,7 +78,7 @@ function AdminOrders() {
       setUpdating(orderId);
 
       const response = await fetch(
-        `http:/https://printcraft-backend.onrender.com/api/orders/admin/${orderId}/status`,
+        `https://printcraft-backend.onrender.com/api/orders/admin/${orderId}/status`,
         {
           method: "PUT",
 
