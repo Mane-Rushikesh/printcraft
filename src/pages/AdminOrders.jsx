@@ -14,62 +14,69 @@ function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(null);
 
-  const user = JSON.parse(
-    localStorage.getItem("user") || "null"
-  );
-
-  const token = localStorage.getItem("token");
-
-  // ===============================
-  // FETCH ALL ORDERS
-  // ===============================
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-
-      const response = await fetch(
-        "https://printcraft-backend.onrender.com/api/orders/admin/all",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to fetch orders"
-        );
-      }
-
-      setOrders(data);
-    } catch (error) {
-      console.error("Admin Orders Error:", error);
-
-      alert(
-        error.message || "Failed to fetch orders"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ===============================
-  // LOAD ORDERS
-  // ===============================
   useEffect(() => {
-    if (user?.role === "admin" && token) {
-      fetchOrders();
-    } else {
-      setLoading(false);
-    }
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+
+        // Get fresh values from localStorage
+        const storedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
+
+        const user = storedUser
+          ? JSON.parse(storedUser)
+          : null;
+
+        console.log("ADMIN USER:", user);
+        console.log("ADMIN ROLE:", user?.role);
+        console.log("TOKEN EXISTS:", !!token);
+
+        if (!user || user.role !== "admin") {
+          console.error("Admin access denied");
+          setLoading(false);
+          return;
+        }
+
+        if (!token) {
+          console.error("JWT token missing");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(
+          "https://printcraft-backend.onrender.com/api/orders/admin/all",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        console.log("ADMIN ORDERS RESPONSE:", data);
+        console.log("STATUS:", response.status);
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Failed to fetch orders"
+          );
+        }
+
+        setOrders(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Admin Orders Error:", error);
+        alert(error.message || "Failed to fetch orders");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, []);
 
-  // ===============================
-  // UPDATE ORDER STATUS
-  // ===============================
   const handleStatusChange = async (
     orderId,
     newStatus
@@ -77,16 +84,16 @@ function AdminOrders() {
     try {
       setUpdating(orderId);
 
+      const token = localStorage.getItem("token");
+
       const response = await fetch(
         `https://printcraft-backend.onrender.com/api/orders/admin/${orderId}/status`,
         {
           method: "PUT",
-
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-
           body: JSON.stringify({
             status: newStatus,
           }),
@@ -101,7 +108,6 @@ function AdminOrders() {
         );
       }
 
-      // Update UI immediately
       setOrders((currentOrders) =>
         currentOrders.map((order) =>
           order.id === orderId
@@ -113,10 +119,7 @@ function AdminOrders() {
         )
       );
     } catch (error) {
-      console.error(
-        "Update Status Error:",
-        error
-      );
+      console.error("Update Status Error:", error);
 
       alert(
         error.message ||
@@ -127,9 +130,11 @@ function AdminOrders() {
     }
   };
 
-  // ===============================
-  // ACCESS DENIED
-  // ===============================
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser
+    ? JSON.parse(storedUser)
+    : null;
+
   if (!user || user.role !== "admin") {
     return (
       <div className="cart-page empty-cart">
@@ -151,9 +156,6 @@ function AdminOrders() {
     );
   }
 
-  // ===============================
-  // LOADING
-  // ===============================
   if (loading) {
     return (
       <div className="cart-page empty-cart">
@@ -171,13 +173,9 @@ function AdminOrders() {
     );
   }
 
-  // ===============================
-  // MAIN UI
-  // ===============================
   return (
     <div className="admin-orders-page">
 
-      {/* BACK */}
       <Link
         to="/admin"
         className="back-link"
@@ -186,7 +184,6 @@ function AdminOrders() {
         Back to Admin Dashboard
       </Link>
 
-      {/* HEADER */}
       <div className="admin-orders-header">
 
         <div>
@@ -213,7 +210,6 @@ function AdminOrders() {
 
       </div>
 
-      {/* EMPTY */}
       {orders.length === 0 ? (
         <div className="admin-empty-orders">
 
@@ -228,18 +224,14 @@ function AdminOrders() {
 
         </div>
       ) : (
-
-        /* ORDER LIST */
         <div className="admin-orders-list">
 
           {orders.map((order) => (
-
             <div
               className="admin-order-card"
               key={order.id}
             >
 
-              {/* ORDER INFORMATION */}
               <div className="admin-order-info">
 
                 <span className="admin-order-number">
@@ -251,47 +243,34 @@ function AdminOrders() {
                 </h3>
 
                 <div className="admin-customer-detail">
-
                   <User size={15} />
-
                   <span>
                     Customer ID: {order.user_id}
                   </span>
-
                 </div>
 
                 <div className="admin-customer-detail">
-
                   <Mail size={15} />
-
                   <span>
                     {order.customer_email}
                   </span>
-
                 </div>
 
                 <div className="admin-customer-detail">
-
                   <CalendarDays size={15} />
-
                   <span>
                     {new Date(
                       order.created_at
-                    ).toLocaleDateString(
-                      "en-IN",
-                      {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      }
-                    )}
+                    ).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
                   </span>
-
                 </div>
 
               </div>
 
-              {/* ORDER RIGHT SIDE */}
               <div className="admin-order-right">
 
                 <div className="admin-order-price">
@@ -348,7 +327,6 @@ function AdminOrders() {
               </div>
 
             </div>
-
           ))}
 
         </div>
