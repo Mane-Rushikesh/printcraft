@@ -38,7 +38,7 @@ function Footer() {
         <div>
           <h4>Contact</h4>
 
-          <p>📞 +91 98765 43210</p>
+          <p>📞 +91 8265078488</p>
           <p>✉️ hello@printcraft.in</p>
           <p>📍 Maharashtra, India</p>
         </div>
