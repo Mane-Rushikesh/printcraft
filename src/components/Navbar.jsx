@@ -198,43 +198,45 @@ function Navbar() {
               MOBILE ACCOUNT MENU
           ================================= */}
 
-          {token && (
+          {/* MOBILE ACCOUNT MENU */}
+<div className="mobile-account-links">
 
-            <div className="mobile-account-links">
+  {token ? (
+    <>
+      {/* My Orders - normal user only */}
+      {user?.role !== "admin" && (
+        <Link
+          to="/orders"
+          className="mobile-menu-link"
+          onClick={() => setOpen(false)}
+        >
+          My Orders
+        </Link>
+      )}
 
+      {/* Logout */}
+      <button
+        type="button"
+        className="mobile-menu-link mobile-logout"
+        onClick={handleLogout}
+      >
+        <LogOut size={17} />
+        Logout
+      </button>
+    </>
+  ) : (
+    /* Login - logged out user */
+    <Link
+      to="/login"
+      className="mobile-menu-link mobile-login"
+      onClick={() => setOpen(false)}
+    >
+      <User size={17} />
+      Login
+    </Link>
+  )}
 
-              {/* MY ORDERS
-                  Only normal users */}
-
-              {user?.role !== "admin" && (
-
-                <Link
-                  to="/orders"
-                  className="mobile-menu-link"
-                  onClick={() =>
-                    setOpen(false)
-                  }
-                >
-                  My Orders
-                </Link>
-
-              )}
-
-
-              {/* LOGOUT */}
-
-              <button
-                type="button"
-                className="mobile-menu-link mobile-logout"
-                onClick={handleLogout}
-              >
-                <LogOut size={17} />
-                Logout
-              </button>
-
-            </div>
-
-          )}
+</div>
 
         </div>
 
