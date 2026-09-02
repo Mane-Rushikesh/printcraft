@@ -1,6 +1,17 @@
-import { ShoppingCart, User, Menu, X, LogOut } from "lucide-react";
+import {
+  ShoppingCart,
+  User,
+  Menu,
+  X,
+  LogOut,
+} from "lucide-react";
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
 import { useCart } from "../context/CartContext";
 
 function Navbar() {
@@ -11,8 +22,14 @@ function Navbar() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user") || "null");
 
+  const user = JSON.parse(
+    localStorage.getItem("user") || "null"
+  );
+
+  // ===============================
+  // LOGOUT
+  // ===============================
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -20,79 +37,139 @@ function Navbar() {
     navigate("/login");
   };
 
+  // ===============================
+  // HOME SECTION NAVIGATION
+  // ===============================
+  const handleSectionClick = (sectionId) => {
+    setOpen(false);
+
+    // If already on Home page
+    if (window.location.pathname === "/") {
+      const section = document.getElementById(sectionId);
+
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      return;
+    }
+
+    // If on another page, first go Home
+    navigate("/");
+
+    // Wait for Home page to render
+    setTimeout(() => {
+      const section = document.getElementById(sectionId);
+
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 300);
+  };
+
   return (
     <nav className="navbar">
+
       <div className="nav-container">
 
-        <Link to="/" className="logo">
+        {/* ===============================
+            LOGO
+        =============================== */}
+
+        <Link
+          to="/"
+          className="logo"
+          onClick={() => setOpen(false)}
+        >
           Print<span>Craft</span>
         </Link>
-        <div className={`nav-links ${open ? "active" : ""}`}>
 
-  <a href="#home" onClick={() => setOpen(false)}>
-    Home
-  </a>
 
-  <a href="#categories" onClick={() => setOpen(false)}>
-    Categories
-  </a>
+        {/* ===============================
+            NAVIGATION LINKS
+        =============================== */}
 
-  <a href="#products" onClick={() => setOpen(false)}>
-    Products
-  </a>
+        <div
+          className={`nav-links ${
+            open ? "active" : ""
+          }`}
+        >
 
-  <a href="#about" onClick={() => setOpen(false)}>
-    About
-  </a>
+          <button
+            type="button"
+            className="nav-link-button"
+            onClick={() =>
+              handleSectionClick("home")
+            }
+          >
+            Home
+          </button>
 
-  <a href="#contact" onClick={() => setOpen(false)}>
-    Contact
-  </a>
 
-</div>
+          <button
+            type="button"
+            className="nav-link-button"
+            onClick={() =>
+              handleSectionClick("categories")
+            }
+          >
+            Categories
+          </button>
 
-       <div className={`nav-links ${open ? "active" : ""}`}>
 
-  <Link
-    to="/"
-    onClick={() => setOpen(false)}
-  >
-    Home
-  </Link>
+          <button
+            type="button"
+            className="nav-link-button"
+            onClick={() =>
+              handleSectionClick("products")
+            }
+          >
+            Products
+          </button>
 
-  <Link
-    to="/#categories"
-    onClick={() => setOpen(false)}
-  >
-    Categories
-  </Link>
 
-  <Link
-    to="/#products"
-    onClick={() => setOpen(false)}
-  >
-    Products
-  </Link>
+          <button
+            type="button"
+            className="nav-link-button"
+            onClick={() =>
+              handleSectionClick("about")
+            }
+          >
+            About
+          </button>
 
-  <Link
-    to="/#about"
-    onClick={() => setOpen(false)}
-  >
-    About
-  </Link>
 
-  <Link
-    to="/#contact"
-    onClick={() => setOpen(false)}
-  >
-    Contact
-  </Link>
+          <button
+            type="button"
+            className="nav-link-button"
+            onClick={() =>
+              handleSectionClick("contact")
+            }
+          >
+            Contact
+          </button>
 
-</div>
+        </div>
+
+
+        {/* ===============================
+            RIGHT SIDE ACTIONS
+        =============================== */}
 
         <div className="nav-actions">
 
-          <Link to="/cart" className="cart-button">
+          {/* CART */}
+
+          <Link
+            to="/cart"
+            className="cart-button"
+          >
             <ShoppingCart size={21} />
 
             {cartCount > 0 && (
@@ -102,20 +179,34 @@ function Navbar() {
             )}
           </Link>
 
+
+          {/* LOGGED IN USER */}
+
           {token ? (
             <>
+
               <span className="user-name">
                 <User size={18} />
+
                 {user?.name || "User"}
               </span>
+
+
+              {/* MY ORDERS
+                  Hidden for admin */}
+
               {user?.role !== "admin" && (
-  <Link
-    to="/orders"
-    className="login-button"
-  >
-    My Orders
-  </Link>
-)}
+                <Link
+                  to="/orders"
+                  className="login-button"
+                >
+                  My Orders
+                </Link>
+              )}
+
+
+              {/* LOGOUT */}
+
               <button
                 className="logout-button"
                 onClick={handleLogout}
@@ -123,25 +214,43 @@ function Navbar() {
                 <LogOut size={18} />
                 Logout
               </button>
+
             </>
           ) : (
-            <Link to="/login" className="login-button">
+
+            /* LOGIN */
+
+            <Link
+              to="/login"
+              className="login-button"
+            >
               <User size={18} />
               Login
             </Link>
-            
+
           )}
 
+
+          {/* MOBILE MENU */}
+
           <button
+            type="button"
             className="menu-button"
-            onClick={() => setOpen(!open)}
+            onClick={() =>
+              setOpen(!open)
+            }
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? (
+              <X size={22} />
+            ) : (
+              <Menu size={22} />
+            )}
           </button>
 
         </div>
 
       </div>
+
     </nav>
   );
 }
