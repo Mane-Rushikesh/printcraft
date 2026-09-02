@@ -70,10 +70,14 @@ function Navbar() {
                 <User size={18} />
                 {user?.name || "User"}
               </span>
-              <Link to="/orders" className="login-button">
-  My Orders
-</Link>
-
+              {user?.role !== "admin" && (
+  <Link
+    to="/orders"
+    className="login-button"
+  >
+    My Orders
+  </Link>
+)}
               <button
                 className="logout-button"
                 onClick={handleLogout}
