@@ -5094,3 +5094,74 @@ body {
     color: #c0392b;
   }
 }
+/* =========================================================
+   FINAL MOBILE ACCOUNT MENU FIX
+========================================================= */
+
+/* Desktop par mobile account menu hidden */
+.mobile-account-links {
+  display: none;
+}
+
+/* Mobile par show */
+@media (max-width: 800px) {
+
+  .mobile-account-links {
+    display: block;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #e8e5df;
+  }
+
+  .mobile-menu-link {
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 14px 15px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+    color: #333;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
+    text-align: left;
+
+    cursor: pointer;
+  }
+
+  .mobile-menu-link:hover {
+    background: #f5f1eb;
+    color: #ff6600;
+  }
+
+  /* Login */
+  .mobile-login {
+    color: #222;
+  }
+
+  .mobile-login:hover {
+    background: #f5f1eb;
+    color: #ff6600;
+  }
+
+  /* Logout */
+  .mobile-logout {
+    color: #c0392b;
+  }
+
+  .mobile-logout:hover {
+    background: #fff2f0;
+    color: #c0392b;
+  }
+}
