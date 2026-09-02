@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { useState } from "react";
+
 import {
   Link,
   useNavigate,
@@ -14,7 +15,9 @@ import {
 
 import { useCart } from "../context/CartContext";
 
+
 function Navbar() {
+
   const [open, setOpen] = useState(false);
 
   const { cartCount } = useCart();
@@ -27,56 +30,80 @@ function Navbar() {
     localStorage.getItem("user") || "null"
   );
 
+
   // ===============================
   // LOGOUT
   // ===============================
+
   const handleLogout = () => {
+
     localStorage.removeItem("token");
+
     localStorage.removeItem("user");
+
+    setOpen(false);
 
     navigate("/login");
   };
 
+
   // ===============================
   // HOME SECTION NAVIGATION
   // ===============================
+
   const handleSectionClick = (sectionId) => {
+
     setOpen(false);
 
-    // If already on Home page
+    // Already on Home page
     if (window.location.pathname === "/") {
-      const section = document.getElementById(sectionId);
+
+      const section =
+        document.getElementById(sectionId);
 
       if (section) {
+
         section.scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
+
       }
 
       return;
     }
 
-    // If on another page, first go Home
+
+    // Go to Home first
     navigate("/");
 
-    // Wait for Home page to render
+
+    // Wait for Home to render
     setTimeout(() => {
-      const section = document.getElementById(sectionId);
+
+      const section =
+        document.getElementById(sectionId);
 
       if (section) {
+
         section.scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
+
       }
+
     }, 300);
+
   };
 
+
   return (
+
     <nav className="navbar">
 
       <div className="nav-container">
+
 
         {/* ===============================
             LOGO
@@ -101,8 +128,10 @@ function Navbar() {
           }`}
         >
 
+
+          {/* HOME */}
+
           <button
-      
             type="button"
             className="nav-link-button"
             onClick={() =>
@@ -112,6 +141,8 @@ function Navbar() {
             Home
           </button>
 
+
+          {/* CATEGORIES */}
 
           <button
             type="button"
@@ -124,6 +155,8 @@ function Navbar() {
           </button>
 
 
+          {/* PRODUCTS */}
+
           <button
             type="button"
             className="nav-link-button"
@@ -134,6 +167,8 @@ function Navbar() {
             Products
           </button>
 
+
+          {/* ABOUT */}
 
           <button
             type="button"
@@ -146,6 +181,8 @@ function Navbar() {
           </button>
 
 
+          {/* CONTACT */}
+
           <button
             type="button"
             className="nav-link-button"
@@ -156,6 +193,49 @@ function Navbar() {
             Contact
           </button>
 
+
+          {/* =================================
+              MOBILE ACCOUNT MENU
+          ================================= */}
+
+          {token && (
+
+            <div className="mobile-account-links">
+
+
+              {/* MY ORDERS
+                  Only normal users */}
+
+              {user?.role !== "admin" && (
+
+                <Link
+                  to="/orders"
+                  className="mobile-menu-link"
+                  onClick={() =>
+                    setOpen(false)
+                  }
+                >
+                  My Orders
+                </Link>
+
+              )}
+
+
+              {/* LOGOUT */}
+
+              <button
+                type="button"
+                className="mobile-menu-link mobile-logout"
+                onClick={handleLogout}
+              >
+                <LogOut size={17} />
+                Logout
+              </button>
+
+            </div>
+
+          )}
+
         </div>
 
 
@@ -165,31 +245,45 @@ function Navbar() {
 
         <div className="nav-actions">
 
+
           {/* CART */}
 
           <Link
             to="/cart"
             className="cart-button"
+            onClick={() => setOpen(false)}
           >
+
             <ShoppingCart size={21} />
 
             {cartCount > 0 && (
+
               <span className="cart-count">
                 {cartCount}
               </span>
+
             )}
+
           </Link>
 
 
-          {/* LOGGED IN USER */}
+          {/* ===============================
+              DESKTOP USER
+          =============================== */}
 
           {token ? (
+
             <>
 
+
+              {/* USER NAME */}
+
               <span className="user-name">
+
                 <User size={18} />
 
                 {user?.name || "User"}
+
               </span>
 
 
@@ -197,18 +291,24 @@ function Navbar() {
                   Hidden for admin */}
 
               {user?.role !== "admin" && (
+
                 <Link
                   to="/orders"
                   className="login-button"
+                  onClick={() =>
+                    setOpen(false)
+                  }
                 >
                   My Orders
                 </Link>
+
               )}
 
 
-              {/* LOGOUT */}
+              {/* DESKTOP LOGOUT */}
 
               <button
+                type="button"
                 className="logout-button"
                 onClick={handleLogout}
               >
@@ -216,14 +316,20 @@ function Navbar() {
                 Logout
               </button>
 
+
             </>
+
           ) : (
 
-            /* LOGIN */
+
+            /* ===============================
+               LOGIN
+            =============================== */
 
             <Link
               to="/login"
               className="login-button"
+              onClick={() => setOpen(false)}
             >
               <User size={18} />
               Login
@@ -232,28 +338,41 @@ function Navbar() {
           )}
 
 
-          {/* MOBILE MENU */}
+          {/* ===============================
+              MOBILE MENU BUTTON
+          =============================== */}
 
           <button
             type="button"
             className="menu-button"
+            aria-label={
+              open
+                ? "Close menu"
+                : "Open menu"
+            }
             onClick={() =>
               setOpen(!open)
             }
           >
+
             {open ? (
               <X size={22} />
             ) : (
               <Menu size={22} />
             )}
+
           </button>
+
 
         </div>
 
       </div>
 
     </nav>
+
   );
+
 }
+
 
 export default Navbar;

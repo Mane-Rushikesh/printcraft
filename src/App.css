@@ -4748,3 +4748,288 @@ body {
   }
 
 }
+/* =========================================================
+   PRINTCRAFT MOBILE NAVBAR
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .navbar {
+    height: 64px;
+  }
+
+  .nav-container {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+
+  /* LOGO */
+
+  .logo {
+    font-size: 22px;
+  }
+
+
+  /* RIGHT ACTIONS */
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+
+  /* CART */
+
+  .cart-button {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+  }
+
+
+  /* USER NAME HIDDEN */
+
+  .user-name {
+    display: none;
+  }
+
+
+  /* DESKTOP MY ORDERS HIDDEN */
+
+  .nav-actions .login-button {
+    display: none;
+  }
+
+
+  /* DESKTOP LOGOUT HIDDEN */
+
+  .nav-actions .logout-button {
+    display: none;
+  }
+
+
+  /* MENU BUTTON */
+
+  .menu-button {
+    display: flex;
+
+    width: 40px;
+    height: 40px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #dedbd5;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #222;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+  }
+
+  .menu-button:hover {
+    background: #f5f1eb;
+  }
+
+
+  /* =========================================
+     MOBILE MENU
+  ========================================= */
+
+  .nav-links {
+    display: none;
+  }
+
+
+  .nav-links.active {
+
+    position: absolute;
+
+    top: 64px;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+
+    padding: 12px 16px 16px;
+
+    background: #ffffff;
+
+    border-top: 1px solid #eeeeee;
+
+    border-bottom: 1px solid #e5e2dc;
+
+    box-shadow:
+      0 15px 30px rgba(0, 0, 0, 0.10);
+
+    z-index: 9999;
+  }
+
+
+  /* =========================================
+     MENU LINKS
+  ========================================= */
+
+  .nav-link-button {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px 15px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #333;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+  }
+
+
+  .nav-link-button:hover {
+
+    background: #f5f1eb;
+
+    color: #ff6600;
+  }
+
+
+  /* =========================================
+     ACCOUNT SECTION
+  ========================================= */
+
+  .mobile-account-links {
+
+    margin-top: 8px;
+
+    padding-top: 8px;
+
+    border-top: 1px solid #e8e5df;
+  }
+
+
+  /* MY ORDERS + LOGOUT */
+
+  .mobile-menu-link {
+
+    width: 100%;
+
+    min-height: 48px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 14px 15px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #333;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    text-align: left;
+
+    cursor: pointer;
+  }
+
+
+  .mobile-menu-link:hover {
+
+    background: #f5f1eb;
+
+    color: #ff6600;
+  }
+
+
+  /* LOGOUT */
+
+  .mobile-logout {
+
+    color: #c0392b;
+  }
+
+
+  .mobile-logout:hover {
+
+    background: #fff2f0;
+
+    color: #c0392b;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .nav-container {
+    padding: 0 12px;
+  }
+
+  .logo {
+    font-size: 21px;
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .cart-button,
+  .menu-button {
+    width: 38px;
+    height: 38px;
+  }
+
+}
