@@ -28,29 +28,44 @@ function Navbar() {
           Print<span>Craft</span>
         </Link>
 
-        <div className={`nav-links ${open ? "active" : ""}`}>
+       <div className={`nav-links ${open ? "active" : ""}`}>
 
-          <a href="#home" onClick={() => setOpen(false)}>
-            Home
-          </a>
+  <Link
+    to="/"
+    onClick={() => setOpen(false)}
+  >
+    Home
+  </Link>
 
-          <a href="#categories" onClick={() => setOpen(false)}>
-            Categories
-          </a>
+  <Link
+    to="/#categories"
+    onClick={() => setOpen(false)}
+  >
+    Categories
+  </Link>
 
-          <a href="#products" onClick={() => setOpen(false)}>
-            Products
-          </a>
+  <Link
+    to="/#products"
+    onClick={() => setOpen(false)}
+  >
+    Products
+  </Link>
 
-          <a href="#about" onClick={() => setOpen(false)}>
-            About
-          </a>
+  <Link
+    to="/#about"
+    onClick={() => setOpen(false)}
+  >
+    About
+  </Link>
 
-          <a href="#contact" onClick={() => setOpen(false)}>
-            Contact
-          </a>
+  <Link
+    to="/#contact"
+    onClick={() => setOpen(false)}
+  >
+    Contact
+  </Link>
 
-        </div>
+</div>
 
         <div className="nav-actions">
 
