@@ -102,7 +102,7 @@ function Navbar() {
         >
 
           <button
-            type="button"
+      
             className="nav-link-button"
             onClick={() =>
               handleSectionClick("home")
