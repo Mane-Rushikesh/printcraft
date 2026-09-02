@@ -4206,3 +4206,524 @@ body {
   }
 
 }
+/* =========================================================
+   PRINTCRAFT HERO - PRINTING SHOWCASE
+========================================================= */
+
+.hero-main-card {
+  position: relative;
+  overflow: hidden;
+
+  padding: 28px;
+
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(255, 102, 0, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #1c1c1c,
+      #0d0d0d
+    );
+
+  border-radius: 28px;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================
+   BRAND
+========================= */
+
+.hero-card-top {
+  position: relative;
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  color: white;
+}
+
+.hero-card-top strong {
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.hero-card-top span {
+  color: #999;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+
+/* =========================
+   ORANGE DECORATION
+========================= */
+
+.orange-circle {
+  position: absolute;
+
+  width: 190px;
+  height: 190px;
+
+  right: -75px;
+  top: 120px;
+
+  border-radius: 50%;
+
+  background: #ff6600;
+
+  opacity: 0.9;
+}
+
+
+/* =========================
+   PRINTING SHOWCASE
+========================= */
+
+.printing-showcase {
+  position: relative;
+  z-index: 3;
+
+  height: 350px;
+
+  margin-top: 22px;
+}
+
+
+/* =========================
+   COMMON CARD
+========================= */
+
+.showcase-card {
+  position: absolute;
+
+  border-radius: 13px;
+
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.25);
+
+  transition: 0.3s ease;
+}
+
+.showcase-card:hover {
+  transform: translateY(-6px) rotate(0deg);
+}
+
+
+/* =========================
+   VISITING CARD
+========================= */
+
+.visiting-card {
+  left: 0;
+  top: 30px;
+
+  width: 185px;
+  height: 105px;
+
+  padding: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: #fff;
+
+  color: #111;
+
+  transform: rotate(-5deg);
+}
+
+.showcase-logo {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #ff6600;
+
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.showcase-card-text strong {
+  display: block;
+
+  font-size: 14px;
+}
+
+.showcase-card-text small {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #777;
+
+  font-size: 9px;
+}
+
+
+/* =========================
+   WEDDING CARD
+========================= */
+
+.wedding-card {
+  right: 8px;
+  top: 15px;
+
+  width: 165px;
+  height: 225px;
+
+  padding: 22px 15px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #28221b,
+      #111
+    );
+
+  border: 1px solid #b99150;
+
+  color: #d7b06c;
+
+  transform: rotate(5deg);
+}
+
+.wedding-card small {
+  font-size: 8px;
+
+  letter-spacing: 2px;
+}
+
+.wedding-card h3 {
+  margin: 55px 0 12px;
+
+  font-family: Georgia, serif;
+
+  font-size: 28px;
+
+  font-weight: 400;
+}
+
+.wedding-card span {
+  font-size: 8px;
+
+  letter-spacing: 1.5px;
+}
+
+.wedding-line {
+  width: 55px;
+  height: 1px;
+
+  margin: 15px auto;
+
+  background: #b99150;
+}
+
+
+/* =========================
+   FLYER
+========================= */
+
+.flyer-card {
+  left: 20px;
+  bottom: 15px;
+
+  width: 150px;
+  height: 175px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff6ed,
+      #fff
+    );
+
+  color: #151515;
+
+  transform: rotate(4deg);
+}
+
+.flyer-card small {
+  color: #ff6600;
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.flyer-card h3 {
+  margin: 15px 0;
+
+  font-size: 24px;
+
+  line-height: 0.95;
+}
+
+.flyer-card strong {
+  color: #ff6600;
+
+  font-size: 8px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   BUSINESS CARD
+========================= */
+
+.business-card {
+  right: 0;
+  bottom: 5px;
+
+  width: 170px;
+  height: 115px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  background: #ff6600;
+
+  color: white;
+
+  transform: rotate(-4deg);
+
+  overflow: hidden;
+}
+
+.business-pattern {
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  right: -35px;
+  top: -35px;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  border-radius: 50%;
+}
+
+.business-card strong {
+  position: relative;
+
+  display: block;
+
+  margin-top: 45px;
+
+  font-size: 13px;
+
+  letter-spacing: 1px;
+}
+
+.business-card span {
+  position: relative;
+
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 8px;
+
+  letter-spacing: 1.3px;
+}
+
+
+/* =========================
+   BOTTOM INFORMATION
+========================= */
+
+.hero-bottom-text {
+  position: relative;
+  z-index: 5;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 12px;
+
+  color: white;
+}
+
+.hero-bottom-number {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ff6600;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hero-bottom-text strong {
+  display: block;
+
+  font-size: 13px;
+}
+
+.hero-bottom-text small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #999;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .hero-main-card {
+    width: 100%;
+    max-width: 470px;
+
+    margin: auto;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .hero-main-card {
+    padding: 22px;
+
+    border-radius: 22px;
+  }
+
+  .printing-showcase {
+    height: 310px;
+  }
+
+  .visiting-card {
+    width: 145px;
+    height: 90px;
+
+    padding: 12px;
+  }
+
+  .showcase-logo {
+    width: 34px;
+    height: 34px;
+
+    font-size: 12px;
+  }
+
+  .showcase-card-text strong {
+    font-size: 11px;
+  }
+
+  .showcase-card-text small {
+    font-size: 7px;
+  }
+
+  .wedding-card {
+    width: 135px;
+    height: 190px;
+
+    padding: 18px 10px;
+  }
+
+  .wedding-card h3 {
+    margin-top: 40px;
+
+    font-size: 23px;
+  }
+
+  .flyer-card {
+    width: 125px;
+    height: 145px;
+
+    padding: 14px;
+  }
+
+  .flyer-card h3 {
+    font-size: 20px;
+  }
+
+  .business-card {
+    width: 140px;
+    height: 95px;
+
+    padding: 14px;
+  }
+
+  .business-card strong {
+    margin-top: 35px;
+
+    font-size: 10px;
+  }
+
+  .business-card span {
+    font-size: 7px;
+  }
+
+}
+
+
+@media (max-width: 400px) {
+
+  .printing-showcase {
+    height: 285px;
+  }
+
+  .visiting-card {
+    left: -5px;
+  }
+
+  .wedding-card {
+    right: -5px;
+  }
+
+  .flyer-card {
+    left: 5px;
+  }
+
+  .business-card {
+    right: -5px;
+  }
+
+}
