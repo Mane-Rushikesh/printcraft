@@ -3416,3 +3416,43 @@ img {
     font-size: 24px;
   }
 }
+/* =========================================================
+   REGISTER PAGE - INPUT ICON FIX
+========================================================= */
+
+.auth-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input-wrapper .auth-input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.auth-input-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px 14px 48px !important;
+}
+
+/* Better focus effect */
+.auth-input-wrapper input:focus {
+  border-color: #222;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Password hint */
+.input-hint {
+  display: block;
+  margin-top: 7px;
+  color: #999;
+  font-size: 12px;
+  line-height: 1.4;
+}
