@@ -4727,3 +4727,24 @@ body {
   }
 
 }
+/* =========================================
+   MOBILE - MY ORDERS VISIBILITY
+========================================= */
+
+@media (max-width: 800px) {
+
+  .nav-actions .login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 12px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    border-radius: 9px;
+    text-decoration: none;
+  }
+
+}
