@@ -54,7 +54,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        "https://printcraft-backend.vercel.app/api/auth/register",
+        "https://printcraft-backend.onrender.com//api/auth/register",
         {
           method: "POST",
           headers: {

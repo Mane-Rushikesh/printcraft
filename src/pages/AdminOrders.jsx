@@ -44,7 +44,7 @@ function AdminOrders() {
         }
 
         const response = await fetch(
-          "https://printcraft-backend.vercel.app/api/orders/admin/all",
+          "https://printcraft-backend.onrender.com//api/orders/admin/all",
           {
             method: "GET",
             headers: {
@@ -87,7 +87,7 @@ function AdminOrders() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://printcraft-backend.vercel.app/api/orders/admin/${orderId}/status`,
+        `https://printcraft-backend.onrender.com//api/orders/admin/${orderId}/status`,
         {
           method: "PUT",
           headers: {

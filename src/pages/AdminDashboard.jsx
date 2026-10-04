@@ -23,7 +23,7 @@ function AdminDashboard() {
     const fetchDashboard = async () => {
       try {
         const response = await fetch(
-          "https://printcraft-backend.vercel.app/api/admin/dashboard",
+          "https://printcraft-backend.onrender.com//api/admin/dashboard",
           {
             headers: {
               Authorization: `Bearer ${token}`,
