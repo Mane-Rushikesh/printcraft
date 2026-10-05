@@ -29,7 +29,7 @@ function OrderDetails() {
         }
 
         const response = await fetch(
-          `https://printcraft-backend.onrender.com//api/orders/${id}`,
+          `https://printcraft-backend.onrender.com/api/orders/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

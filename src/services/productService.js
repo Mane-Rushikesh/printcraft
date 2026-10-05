@@ -1,4 +1,4 @@
-const API_URL = "https://printcraft-backend.onrender.com//api";
+const API_URL = "https://printcraft-backend.onrender.com/api";
 
 export const getProducts = async () => {
   try {
