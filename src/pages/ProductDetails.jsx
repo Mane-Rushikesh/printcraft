@@ -19,12 +19,24 @@ function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Customization
-  const [brideName, setBrideName] = useState("");
-  const [groomName, setGroomName] = useState("");
-  const [weddingDate, setWeddingDate] = useState("");
+  /* =========================
+     CUSTOMIZATION STATES
+  ========================= */
+
+  const [design, setDesign] = useState(1);
+
+  const [name, setName] = useState("");
+  const [name2, setName2] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [age, setAge] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [venue, setVenue] = useState("");
-  const [selectedDesign, setSelectedDesign] = useState(1);
+  const [message, setMessage] = useState("");
+
+  /* =========================
+     FETCH PRODUCT
+  ========================= */
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -32,7 +44,6 @@ function ProductDetails() {
         setLoading(true);
         setError("");
 
-        // Remove trailing slash and /api if already present
         const API_URL = (
           import.meta.env.VITE_API_URL ||
           "https://printcraft-backend.onrender.com"
@@ -64,6 +75,10 @@ function ProductDetails() {
     }
   }, [id]);
 
+  /* =========================
+     LOADING
+  ========================= */
+
   if (loading) {
     return (
       <div className="product-details-page product-loading">
@@ -72,6 +87,10 @@ function ProductDetails() {
       </div>
     );
   }
+
+  /* =========================
+     ERROR
+  ========================= */
 
   if (error || !product) {
     return (
@@ -94,50 +113,288 @@ function ProductDetails() {
     );
   }
 
-  // Check whether this is a wedding card
-  const isWeddingCard =
-    product.category?.toLowerCase().includes("wedding") ||
-    product.name?.toLowerCase().includes("wedding");
+  /* =========================
+     PRODUCT TYPE
+  ========================= */
+
+  const category = (
+    product.category ||
+    ""
+  ).toLowerCase();
+
+  const productName = (
+    product.name ||
+    ""
+  ).toLowerCase();
+
+  const isWedding =
+    category.includes("wedding") ||
+    productName.includes("wedding");
+
+  const isInvitation =
+    category.includes("invitation") ||
+    productName.includes("invitation");
+
+  const isBirthday =
+    category.includes("birthday") ||
+    productName.includes("birthday");
+
+  const isBabyShower =
+    category.includes("baby") ||
+    productName.includes("baby shower");
+
+  const isParty =
+    category.includes("party") ||
+    productName.includes("party");
+
+  const isCard =
+    isWedding ||
+    isInvitation ||
+    isBirthday ||
+    isBabyShower ||
+    isParty ||
+    category.includes("card");
+
+  /* =========================
+     CUSTOMIZATION TITLE
+  ========================= */
+
+  let customizationTitle = "Customize Your Product";
+
+  if (isWedding) {
+    customizationTitle = "Customize Your Wedding Card";
+  } else if (isInvitation) {
+    customizationTitle = "Customize Your Invitation Card";
+  } else if (isBirthday) {
+    customizationTitle = "Customize Your Birthday Card";
+  } else if (isBabyShower) {
+    customizationTitle = "Customize Your Baby Shower Card";
+  } else if (isParty) {
+    customizationTitle = "Customize Your Party Card";
+  }
+
+  /* =========================
+     ADD TO CART
+  ========================= */
 
   const handleAddToCart = () => {
-    if (isWeddingCard) {
-      if (!brideName.trim() || !groomName.trim()) {
-        alert("Please enter Bride Name and Groom Name.");
-        return;
-      }
-
-      addToCart({
-        ...product,
-        customization: {
-          brideName,
-          groomName,
-          weddingDate,
-          venue,
-          design: selectedDesign,
-        },
-      });
-
-      alert("Customized wedding card added to cart!");
+    if (!isCard) {
+      addToCart(product);
       return;
     }
 
-    addToCart(product);
+    /* Wedding validation */
+
+    if (isWedding) {
+      if (!name.trim() || !name2.trim()) {
+        alert("Please enter Bride Name and Groom Name.");
+        return;
+      }
+    }
+
+    /* Invitation / Party validation */
+
+    if (isInvitation || isParty) {
+      if (!eventName.trim()) {
+        alert("Please enter the event name.");
+        return;
+      }
+    }
+
+    /* Birthday validation */
+
+    if (isBirthday) {
+      if (!name.trim()) {
+        alert("Please enter the name.");
+        return;
+      }
+    }
+
+    /* Baby Shower validation */
+
+    if (isBabyShower) {
+      if (!name.trim()) {
+        alert("Please enter the parents' names.");
+        return;
+      }
+    }
+
+    const customization = {
+      design,
+
+      name,
+      name2,
+      eventName,
+      age,
+      date,
+      time,
+      venue,
+      message,
+    };
+
+    addToCart({
+      ...product,
+      customization,
+    });
+
+    alert("Your customized product has been added to cart!");
+  };
+
+  /* =========================
+     DESIGN INFORMATION
+  ========================= */
+
+  const designStyles = {
+    1: {
+      background:
+        "linear-gradient(135deg, #f8e7bd, #fff8e8)",
+      border: "6px solid #c49a45",
+      heading: "#7b5722",
+      text: "#4f402b",
+      label: "Royal Gold",
+    },
+
+    2: {
+      background:
+        "linear-gradient(135deg, #f7dfe5, #fff5f7)",
+      border: "6px solid #d28b9b",
+      heading: "#9b4961",
+      text: "#65414b",
+      label: "Floral Elegant",
+    },
+
+    3: {
+      background:
+        "linear-gradient(135deg, #dce8df, #f5faf6)",
+      border: "6px solid #54745f",
+      heading: "#345340",
+      text: "#43564a",
+      label: "Modern Green",
+    },
+  };
+
+  const currentDesign = designStyles[design];
+
+  /* =========================
+     PREVIEW CONTENT
+  ========================= */
+
+  const getPreviewHeading = () => {
+    if (isWedding) {
+      return "WEDDING INVITATION";
+    }
+
+    if (isBirthday) {
+      return "YOU'RE INVITED";
+    }
+
+    if (isBabyShower) {
+      return "BABY SHOWER";
+    }
+
+    if (isParty) {
+      return "LET'S CELEBRATE";
+    }
+
+    if (isInvitation) {
+      return "YOU'RE INVITED";
+    }
+
+    return "PRINTCRAFT";
+  };
+
+  const getPreviewNames = () => {
+    if (isWedding) {
+      return (
+        <>
+          {name || "Bride"} <span>♥</span>{" "}
+          {name2 || "Groom"}
+        </>
+      );
+    }
+
+    if (isBirthday) {
+      return name || "Birthday Celebration";
+    }
+
+    if (isBabyShower) {
+      return name || "Parents' Names";
+    }
+
+    if (isInvitation || isParty) {
+      return eventName || "Your Event";
+    }
+
+    return product.name;
+  };
+
+  const getPreviewDate = () => {
+    if (!date) return "Event Date";
+
+    return new Date(date).toLocaleDateString(
+      "en-IN",
+      {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }
+    );
+  };
+
+  /* =========================
+     INPUT COMPONENT
+  ========================= */
+
+  const InputField = ({
+    label,
+    value,
+    onChange,
+    placeholder,
+    type = "text",
+  }) => {
+    return (
+      <div style={fieldWrapper}>
+        <label style={labelStyle}>
+          {label}
+        </label>
+
+        <input
+          type={type}
+          value={value}
+          onChange={(e) =>
+            onChange(e.target.value)
+          }
+          placeholder={placeholder}
+          style={inputStyle}
+        />
+      </div>
+    );
   };
 
   return (
     <main className="product-details-page">
       <div className="product-details-container">
 
-        {/* Back */}
-        <Link to="/" className="product-back-link">
+        {/* =========================
+            BACK
+        ========================= */}
+
+        <Link
+          to="/"
+          className="product-back-link"
+        >
           <ArrowLeft size={17} />
           Back to Products
         </Link>
 
-        {/* Main Product */}
+        {/* =========================
+            MAIN PRODUCT
+        ========================= */}
+
         <section className="product-details-main">
 
-          {/* Product Image / Preview */}
+          {/* PRODUCT IMAGE */}
+
           <div className="product-details-image">
             <img
               src={product.image}
@@ -145,7 +402,8 @@ function ProductDetails() {
             />
           </div>
 
-          {/* Product Information */}
+          {/* PRODUCT INFO */}
+
           <div className="product-details-info">
 
             <span className="product-details-category">
@@ -166,260 +424,310 @@ function ProductDetails() {
               </strong>
             </div>
 
-            {/* ============================= */}
-            {/* WEDDING CARD CUSTOMIZATION */}
-            {/* ============================= */}
+            {/* =========================
+                CUSTOMIZATION
+            ========================= */}
 
-            {isWeddingCard && (
-              <div
-                style={{
-                  marginTop: "25px",
-                  padding: "22px",
-                  borderRadius: "16px",
-                  background: "#fafafa",
-                  border: "1px solid #e5e5e5",
-                }}
-              >
-                <h2
-                  style={{
-                    marginTop: 0,
-                    marginBottom: "6px",
-                    fontSize: "22px",
-                  }}
-                >
-                  Customize Your Wedding Card
+            {isCard && (
+              <div style={customizationBox}>
+
+                <h2 style={customizationTitleStyle}>
+                  {customizationTitle}
                 </h2>
 
-                <p
-                  style={{
-                    color: "#666",
-                    marginBottom: "20px",
-                  }}
-                >
-                  Enter your details and choose your preferred design.
+                <p style={helperText}>
+                  Personalize your design before
+                  adding it to your cart.
                 </p>
 
-                {/* Bride */}
-                <div style={{ marginBottom: "14px" }}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontWeight: "600",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    Bride Name
+                {/* WEDDING */}
+
+                {isWedding && (
+                  <>
+                    <InputField
+                      label="Bride Name"
+                      value={name}
+                      onChange={setName}
+                      placeholder="Enter bride name"
+                    />
+
+                    <InputField
+                      label="Groom Name"
+                      value={name2}
+                      onChange={setName2}
+                      placeholder="Enter groom name"
+                    />
+                  </>
+                )}
+
+                {/* INVITATION / PARTY */}
+
+                {(isInvitation || isParty) && (
+                  <>
+                    <InputField
+                      label="Event Name"
+                      value={eventName}
+                      onChange={setEventName}
+                      placeholder="Birthday Party, Engagement, Anniversary..."
+                    />
+
+                    <InputField
+                      label="Host Name"
+                      value={name}
+                      onChange={setName}
+                      placeholder="Enter host name"
+                    />
+                  </>
+                )}
+
+                {/* BIRTHDAY */}
+
+                {isBirthday && (
+                  <>
+                    <InputField
+                      label="Name"
+                      value={name}
+                      onChange={setName}
+                      placeholder="Enter birthday person's name"
+                    />
+
+                    <InputField
+                      label="Age"
+                      value={age}
+                      onChange={setAge}
+                      placeholder="Enter age"
+                      type="number"
+                    />
+                  </>
+                )}
+
+                {/* BABY SHOWER */}
+
+                {isBabyShower && (
+                  <>
+                    <InputField
+                      label="Parents' Names"
+                      value={name}
+                      onChange={setName}
+                      placeholder="Enter parents' names"
+                    />
+
+                    <InputField
+                      label="Baby Name (Optional)"
+                      value={name2}
+                      onChange={setName2}
+                      placeholder="Enter baby name"
+                    />
+                  </>
+                )}
+
+                {/* COMMON DATE */}
+
+                <InputField
+                  label="Date"
+                  value={date}
+                  onChange={setDate}
+                  type="date"
+                />
+
+                {/* COMMON TIME */}
+
+                <InputField
+                  label="Time"
+                  value={time}
+                  onChange={setTime}
+                  placeholder="Example: 7:00 PM"
+                />
+
+                {/* COMMON VENUE */}
+
+                <InputField
+                  label="Venue"
+                  value={venue}
+                  onChange={setVenue}
+                  placeholder="Enter venue"
+                />
+
+                {/* MESSAGE */}
+
+                <div style={fieldWrapper}>
+                  <label style={labelStyle}>
+                    Message
                   </label>
 
-                  <input
-                    type="text"
-                    placeholder="Enter bride name"
-                    value={brideName}
-                    onChange={(e) => setBrideName(e.target.value)}
-                    style={inputStyle}
+                  <textarea
+                    value={message}
+                    onChange={(e) =>
+                      setMessage(e.target.value)
+                    }
+                    placeholder="Enter your invitation message"
+                    rows="3"
+                    style={{
+                      ...inputStyle,
+                      resize: "vertical",
+                    }}
                   />
                 </div>
 
-                {/* Groom */}
-                <div style={{ marginBottom: "14px" }}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontWeight: "600",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    Groom Name
-                  </label>
+                {/* =========================
+                    DESIGNS
+                ========================= */}
 
-                  <input
-                    type="text"
-                    placeholder="Enter groom name"
-                    value={groomName}
-                    onChange={(e) => setGroomName(e.target.value)}
-                    style={inputStyle}
-                  />
-                </div>
-
-                {/* Date */}
-                <div style={{ marginBottom: "14px" }}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontWeight: "600",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    Wedding Date
-                  </label>
-
-                  <input
-                    type="date"
-                    value={weddingDate}
-                    onChange={(e) => setWeddingDate(e.target.value)}
-                    style={inputStyle}
-                  />
-                </div>
-
-                {/* Venue */}
-                <div style={{ marginBottom: "20px" }}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontWeight: "600",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    Venue
-                  </label>
-
-                  <input
-                    type="text"
-                    placeholder="Enter wedding venue"
-                    value={venue}
-                    onChange={(e) => setVenue(e.target.value)}
-                    style={inputStyle}
-                  />
-                </div>
-
-                {/* Designs */}
-                <h3 style={{ marginBottom: "12px" }}>
+                <h3 style={designHeading}>
                   Choose Your Design
                 </h3>
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {[1, 2, 3].map((design) => (
-                    <button
-                      key={design}
-                      type="button"
-                      onClick={() => setSelectedDesign(design)}
-                      style={{
-                        padding: "10px 16px",
-                        borderRadius: "8px",
-                        border:
-                          selectedDesign === design
-                            ? "2px solid #ff5a00"
-                            : "1px solid #ccc",
-                        background:
-                          selectedDesign === design
-                            ? "#fff3eb"
-                            : "#fff",
-                        cursor: "pointer",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Design {design}
-                    </button>
-                  ))}
+                <div style={designGrid}>
+
+                  {Object.entries(designStyles).map(
+                    ([number, style]) => (
+                      <button
+                        key={number}
+                        type="button"
+                        onClick={() =>
+                          setDesign(Number(number))
+                        }
+                        style={{
+                          ...designButton,
+                          border:
+                            design === Number(number)
+                              ? `3px solid ${style.heading}`
+                              : "1px solid #ddd",
+                          background:
+                            design === Number(number)
+                              ? "#fffaf5"
+                              : "#fff",
+                        }}
+                      >
+
+                        <div
+                          style={{
+                            ...miniDesign,
+                            background:
+                              style.background,
+                            border: `3px solid ${style.heading}`,
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: style.heading,
+                              fontWeight: "700",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {style.label}
+                          </span>
+                        </div>
+
+                        <span>
+                          Design {number}
+                        </span>
+                      </button>
+                    )
+                  )}
+
                 </div>
 
-                {/* Live Preview */}
-                <div style={{ marginTop: "25px" }}>
-                  <h3>Live Preview</h3>
+                {/* =========================
+                    LIVE PREVIEW
+                ========================= */}
+
+                <div style={previewSection}>
+
+                  <h3>
+                    Live Preview
+                  </h3>
 
                   <div
                     style={{
-                      position: "relative",
-                      width: "100%",
-                      maxWidth: "380px",
-                      height: "230px",
-                      margin: "0 auto",
-                      overflow: "hidden",
-                      borderRadius: "12px",
-                      background: "#f5ead8",
+                      ...previewCard,
+                      background:
+                        currentDesign.background,
                       border:
-                        selectedDesign === 1
-                          ? "5px solid #c89b3c"
-                          : selectedDesign === 2
-                          ? "5px solid #d89b9b"
-                          : "5px solid #6d4c41",
-                      boxShadow:
-                        "0 8px 25px rgba(0,0,0,0.15)",
+                        currentDesign.border,
                     }}
                   >
-                    <img
-                      src={product.image}
-                      alt="Wedding card preview"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        opacity: 0.32,
-                      }}
-                    />
 
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        textAlign: "center",
-                        padding: "20px",
-                      }}
-                    >
+                    <div style={previewOverlay}>
+
                       <div
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "700",
-                          letterSpacing: "2px",
-                          marginBottom: "8px",
+                          ...previewSmallHeading,
+                          color:
+                            currentDesign.heading,
                         }}
                       >
-                        WEDDING INVITATION
+                        {getPreviewHeading()}
                       </div>
 
                       <div
                         style={{
-                          fontSize: "24px",
-                          fontWeight: "700",
+                          ...previewMainText,
+                          color:
+                            currentDesign.heading,
                         }}
                       >
-                        {groomName || "Groom"}{" "}
-                        <span>♥</span>{" "}
-                        {brideName || "Bride"}
+                        {getPreviewNames()}
                       </div>
 
                       <div
                         style={{
-                          marginTop: "10px",
-                          fontSize: "14px",
+                          ...previewText,
+                          color:
+                            currentDesign.text,
                         }}
                       >
-                        {weddingDate
-                          ? new Date(
-                              weddingDate
-                            ).toLocaleDateString("en-IN", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })
-                          : "Wedding Date"}
+                        {getPreviewDate()}
                       </div>
+
+                      {time && (
+                        <div
+                          style={{
+                            ...previewText,
+                            color:
+                              currentDesign.text,
+                          }}
+                        >
+                          {time}
+                        </div>
+                      )}
 
                       <div
                         style={{
-                          marginTop: "5px",
-                          fontSize: "13px",
+                          ...previewText,
+                          color:
+                            currentDesign.text,
                         }}
                       >
-                        {venue || "Wedding Venue"}
+                        {venue || "Your Venue"}
                       </div>
+
+                      {message && (
+                        <div
+                          style={{
+                            marginTop: "10px",
+                            fontSize: "12px",
+                            color:
+                              currentDesign.text,
+                            maxWidth: "280px",
+                          }}
+                        >
+                          {message}
+                        </div>
+                      )}
+
                     </div>
                   </div>
+
                 </div>
+
               </div>
             )}
 
-            {/* Add Cart */}
+            {/* =========================
+                ADD TO CART
+            ========================= */}
+
             <button
               className="product-details-cart-button"
               onClick={handleAddToCart}
@@ -429,12 +737,15 @@ function ProductDetails() {
             >
               <ShoppingCart size={19} />
 
-              {isWeddingCard
+              {isCard
                 ? "Customize & Add to Cart"
                 : "Add to Cart"}
             </button>
 
-            {/* Features */}
+            {/* =========================
+                FEATURES
+            ========================= */}
+
             <div className="product-details-features">
 
               <div className="product-feature">
@@ -443,7 +754,10 @@ function ProductDetails() {
                 </div>
 
                 <div>
-                  <strong>Premium Quality</strong>
+                  <strong>
+                    Premium Quality
+                  </strong>
+
                   <span>
                     High-quality printing materials
                   </span>
@@ -456,9 +770,13 @@ function ProductDetails() {
                 </div>
 
                 <div>
-                  <strong>Custom Design</strong>
+                  <strong>
+                    Custom Design
+                  </strong>
+
                   <span>
-                    Designed according to your requirements
+                    Personalized according to
+                    your requirements
                   </span>
                 </div>
               </div>
@@ -469,7 +787,10 @@ function ProductDetails() {
                 </div>
 
                 <div>
-                  <strong>Fast Delivery</strong>
+                  <strong>
+                    Fast Delivery
+                  </strong>
+
                   <span>
                     Reliable delivery across India
                   </span>
@@ -477,59 +798,114 @@ function ProductDetails() {
               </div>
 
             </div>
+
           </div>
         </section>
 
-        {/* Bottom Information */}
+        {/* =========================
+            BOTTOM BENEFITS
+        ========================= */}
+
         <section className="product-details-benefits">
 
           <div className="benefit-item">
+
             <div className="benefit-icon">
               <ShieldCheck size={22} />
             </div>
 
             <div>
-              <h3>Quality Guaranteed</h3>
+              <h3>
+                Quality Guaranteed
+              </h3>
+
               <p>
                 Every product is carefully printed
                 and professionally finished.
               </p>
             </div>
+
           </div>
 
           <div className="benefit-item">
+
             <div className="benefit-icon">
               <Truck size={22} />
             </div>
 
             <div>
-              <h3>Reliable Delivery</h3>
+              <h3>
+                Reliable Delivery
+              </h3>
+
               <p>
                 Your custom prints are safely packed
                 and delivered across India.
               </p>
             </div>
+
           </div>
 
           <div className="benefit-item">
+
             <div className="benefit-icon">
               <Sparkles size={22} />
             </div>
 
             <div>
-              <h3>Made For You</h3>
+              <h3>
+                Made For You
+              </h3>
+
               <p>
                 Create personalized products that
                 match your exact requirements.
               </p>
             </div>
+
           </div>
 
         </section>
+
       </div>
     </main>
   );
 }
+
+/* =====================================================
+   STYLES
+===================================================== */
+
+const customizationBox = {
+  marginTop: "25px",
+  padding: "22px",
+  borderRadius: "18px",
+  background: "#fafafa",
+  border: "1px solid #e5e5e5",
+};
+
+const customizationTitleStyle = {
+  marginTop: 0,
+  marginBottom: "6px",
+  fontSize: "23px",
+};
+
+const helperText = {
+  color: "#666",
+  marginBottom: "22px",
+  fontSize: "14px",
+};
+
+const fieldWrapper = {
+  marginBottom: "15px",
+};
+
+const labelStyle = {
+  display: "block",
+  fontWeight: "600",
+  marginBottom: "6px",
+  fontSize: "14px",
+};
 
 const inputStyle = {
   width: "100%",
@@ -539,6 +915,82 @@ const inputStyle = {
   fontSize: "15px",
   boxSizing: "border-box",
   outline: "none",
+  background: "#fff",
+};
+
+const designHeading = {
+  marginTop: "24px",
+  marginBottom: "12px",
+};
+
+const designGrid = {
+  display: "grid",
+  gridTemplateColumns:
+    "repeat(3, minmax(0, 1fr))",
+  gap: "10px",
+};
+
+const designButton = {
+  padding: "8px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "600",
+  textAlign: "center",
+};
+
+const miniDesign = {
+  height: "75px",
+  borderRadius: "6px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: "8px",
+};
+
+const previewSection = {
+  marginTop: "28px",
+};
+
+const previewCard = {
+  position: "relative",
+  width: "100%",
+  maxWidth: "420px",
+  minHeight: "280px",
+  margin: "15px auto 0",
+  borderRadius: "16px",
+  overflow: "hidden",
+  boxShadow:
+    "0 10px 30px rgba(0,0,0,0.15)",
+  boxSizing: "border-box",
+};
+
+const previewOverlay = {
+  minHeight: "280px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  textAlign: "center",
+  padding: "25px",
+  boxSizing: "border-box",
+};
+
+const previewSmallHeading = {
+  fontSize: "13px",
+  fontWeight: "700",
+  letterSpacing: "2px",
+  marginBottom: "12px",
+};
+
+const previewMainText = {
+  fontSize: "26px",
+  fontWeight: "700",
+  marginBottom: "10px",
+};
+
+const previewText = {
+  fontSize: "13px",
+  marginTop: "3px",
 };
 
 export default ProductDetails;
