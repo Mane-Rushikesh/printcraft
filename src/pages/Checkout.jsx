@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import {
   ArrowLeft,
   ShoppingBag,
@@ -8,9 +7,9 @@ import {
   CreditCard,
   Smartphone,
   ShieldCheck,
-  Lock,
-  CheckCircle2,
   Truck,
+  CheckCircle,
+  Lock,
 } from "lucide-react";
 
 import { useCart } from "../context/CartContext";
@@ -30,40 +29,25 @@ function Checkout() {
 
   const token = localStorage.getItem("token");
 
-  // =========================
-  // EMPTY CART
-  // =========================
-
   if (cart.length === 0) {
     return (
-      <div className="cart-page empty-cart">
-
+      <div className="checkout-empty">
         <ShoppingBag size={60} />
 
         <h1>Your Cart is Empty</h1>
 
-        <p>
-          Add some products before checkout.
-        </p>
+        <p>Add some products before checkout.</p>
 
         <Link to="/" className="primary-button">
           Continue Shopping
         </Link>
-
       </div>
     );
   }
 
-  // =========================
-  // LOGIN REQUIRED
-  // =========================
-
   if (!token) {
     return (
-      <div className="cart-page empty-cart">
-
-        <Lock size={50} />
-
+      <div className="checkout-empty">
         <h1>Please Login</h1>
 
         <p>
@@ -73,37 +57,15 @@ function Checkout() {
         <Link to="/login" className="primary-button">
           Login
         </Link>
-
       </div>
     );
   }
 
-  // =========================
-  // PLACE ORDER
-  // =========================
-
   const handlePlaceOrder = async () => {
     try {
-
-      // Card and UPI are selectable,
-      // but actual payment gateway is not connected yet.
-      if (
-        paymentMethod === "card" ||
-        paymentMethod === "upi"
-      ) {
-        alert(
-          "Online payment is selected. Card and UPI payment gateway will be connected next."
-        );
-
-        return;
-      }
-
       setPlacingOrder(true);
 
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
-
+      const user = JSON.parse(localStorage.getItem("user"));
       const token = localStorage.getItem("token");
 
       const response = await fetch(
@@ -120,10 +82,7 @@ function Checkout() {
             user_id: user.id,
             items: cart,
             total_amount: cartTotal,
-
             payment_method: paymentMethod,
-
-            payment_status: "pending",
           }),
         }
       );
@@ -132,581 +91,393 @@ function Checkout() {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to place order"
+          data.message || "Failed to place order"
         );
       }
 
-      // Clear cart after successful order
       clearCart();
 
       alert(
-        `Order placed successfully!\n\nOrder ID: ${data.orderId}\nPayment: Cash on Delivery`
+        `Order placed successfully! Order ID: ${data.orderId}`
       );
 
-      navigate(
-        `/orders/${data.orderId}`
-      );
+      navigate(`/orders/${data.orderId}`);
 
     } catch (error) {
-
-      console.error(
-        "Order Error:",
-        error
-      );
+      console.error("Order Error:", error);
 
       alert(
-        error.message ||
-          "Failed to place order"
+        error.message || "Failed to place order"
       );
-
     } finally {
-
       setPlacingOrder(false);
-
     }
   };
-
-  // =========================
-  // PAYMENT METHOD
-  // =========================
-
-  const paymentMethods = [
-    {
-      id: "cod",
-      title: "Cash on Delivery",
-      description:
-        "Pay when your order arrives",
-      icon: Banknote,
-      badge: "Available",
-    },
-
-    {
-      id: "card",
-      title: "Credit / Debit Card",
-      description:
-        "Visa, Mastercard & other cards",
-      icon: CreditCard,
-      badge: "Online",
-    },
-
-    {
-      id: "upi",
-      title: "UPI Payment",
-      description:
-        "Google Pay, PhonePe, Paytm & more",
-      icon: Smartphone,
-      badge: "Online",
-    },
-  ];
 
   return (
     <div className="checkout-page">
 
-      {/* =========================
-          TOP BAR
-      ========================= */}
+      {/* Top */}
 
-      <div className="checkout-top">
+      <div className="checkout-container">
 
-        <Link
-          to="/cart"
-          className="checkout-back"
-        >
+        <Link to="/cart" className="checkout-back">
           <ArrowLeft size={18} />
-
           Back to Cart
         </Link>
 
-        <div className="checkout-security">
+        <div className="checkout-heading">
+          <div>
+            <span>PRINTCRAFT</span>
 
-          <ShieldCheck size={18} />
+            <h1>Checkout</h1>
 
-          Secure Checkout
-
-        </div>
-
-      </div>
-
-      {/* =========================
-          HEADER
-      ========================= */}
-
-      <div className="checkout-header">
-
-        <div>
-
-          <span className="checkout-brand">
-            PRINTCRAFT
-          </span>
-
-          <h1>
-            Checkout
-          </h1>
-
-          <p>
-            Complete your order securely
-            and choose your preferred
-            payment method.
-          </p>
-
-        </div>
-
-        <div className="checkout-step">
-
-          <div className="step active">
-            <CheckCircle2 size={18} />
-            Cart
+            <p>
+              Complete your order securely
+            </p>
           </div>
 
-          <div className="step-line"></div>
-
-          <div className="step active">
-            <CheckCircle2 size={18} />
-            Checkout
+          <div className="checkout-items-count">
+            <ShoppingBag size={20} />
+            {cartCount}{" "}
+            {cartCount === 1 ? "Item" : "Items"}
           </div>
-
-          <div className="step-line"></div>
-
-          <div className="step">
-            <Truck size={18} />
-            Delivery
-          </div>
-
         </div>
 
-      </div>
+        <div className="checkout-layout">
 
-      {/* =========================
-          MAIN CONTENT
-      ========================= */}
+          {/* LEFT */}
 
-      <div className="checkout-layout">
+          <div className="checkout-left">
 
-        {/* =========================
-            LEFT SIDE
-        ========================= */}
+            {/* Order Items */}
 
-        <div className="checkout-left">
+            <section className="checkout-card">
 
-          {/* ORDER ITEMS */}
+              <div className="checkout-card-title">
+                <ShoppingBag size={21} />
 
-          <section className="checkout-card">
-
-            <div className="checkout-card-title">
-
-              <div>
-
-                <span>
-                  YOUR ORDER
-                </span>
-
-                <h2>
-                  Order Items
-                </h2>
-
+                <div>
+                  <h2>Order Items</h2>
+                  <p>Your selected products</p>
+                </div>
               </div>
 
-              <strong>
-                {cartCount}{" "}
-                {cartCount === 1
-                  ? "Item"
-                  : "Items"}
-              </strong>
+              <div className="checkout-products">
 
-            </div>
-
-            <div className="checkout-items">
-
-              {cart.map((item) => (
-
-                <div
-                  className="checkout-item"
-                  key={item.id}
-                >
-
-                  <div className="checkout-product-image">
+                {cart.map((item) => (
+                  <div
+                    className="checkout-product"
+                    key={item.id}
+                  >
 
                     <img
                       src={item.image}
                       alt={item.name}
                     />
 
+                    <div className="checkout-product-info">
+
+                      <span>
+                        {item.category}
+                      </span>
+
+                      <h3>
+                        {item.name}
+                      </h3>
+
+                      <p>
+                        ₹{item.price} × {item.quantity}
+                      </p>
+
+                    </div>
+
+                    <strong>
+                      ₹{item.price * item.quantity}
+                    </strong>
+
+                  </div>
+                ))}
+
+              </div>
+
+            </section>
+
+            {/* Payment */}
+
+            <section className="checkout-card">
+
+              <div className="checkout-card-title">
+                <CreditCard size={21} />
+
+                <div>
+                  <h2>Choose Payment Method</h2>
+
+                  <p>
+                    Select your preferred payment option
+                  </p>
+                </div>
+              </div>
+
+              <div className="payment-methods">
+
+                {/* COD */}
+
+                <button
+                  type="button"
+                  className={`payment-option ${
+                    paymentMethod === "cod"
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setPaymentMethod("cod")
+                  }
+                >
+
+                  <div className="payment-icon">
+                    <Banknote size={25} />
                   </div>
 
-                  <div className="checkout-product-info">
+                  <div className="payment-content">
+                    <strong>
+                      Cash on Delivery
+                    </strong>
 
                     <span>
-                      {item.category}
+                      Pay when your order arrives
                     </span>
-
-                    <h3>
-                      {item.name}
-                    </h3>
-
-                    <p>
-                      ₹{item.price} ×{" "}
-                      {item.quantity}
-                    </p>
-
                   </div>
 
-                  <strong className="checkout-product-total">
-                    ₹
-                    {(
-                      item.price *
-                      item.quantity
-                    ).toFixed(2)}
-                  </strong>
+                  {paymentMethod === "cod" && (
+                    <CheckCircle
+                      className="payment-check"
+                      size={22}
+                    />
+                  )}
 
+                </button>
+
+                {/* CARD */}
+
+                <button
+                  type="button"
+                  className={`payment-option ${
+                    paymentMethod === "card"
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setPaymentMethod("card")
+                  }
+                >
+
+                  <div className="payment-icon">
+                    <CreditCard size={25} />
+                  </div>
+
+                  <div className="payment-content">
+                    <strong>
+                      Credit / Debit Card
+                    </strong>
+
+                    <span>
+                      Visa, Mastercard & other cards
+                    </span>
+                  </div>
+
+                  {paymentMethod === "card" && (
+                    <CheckCircle
+                      className="payment-check"
+                      size={22}
+                    />
+                  )}
+
+                </button>
+
+                {/* UPI */}
+
+                <button
+                  type="button"
+                  className={`payment-option ${
+                    paymentMethod === "upi"
+                      ? "selected"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setPaymentMethod("upi")
+                  }
+                >
+
+                  <div className="payment-icon">
+                    <Smartphone size={25} />
+                  </div>
+
+                  <div className="payment-content">
+                    <strong>
+                      UPI Payment
+                    </strong>
+
+                    <span>
+                      Google Pay, PhonePe, Paytm & more
+                    </span>
+                  </div>
+
+                  {paymentMethod === "upi" && (
+                    <CheckCircle
+                      className="payment-check"
+                      size={22}
+                    />
+                  )}
+
+                </button>
+
+              </div>
+
+              <div className="payment-info">
+
+                <ShieldCheck size={19} />
+
+                <span>
+                  Your payment information is secure
+                  and protected.
+                </span>
+
+              </div>
+
+            </section>
+
+          </div>
+
+          {/* RIGHT */}
+
+          <aside className="checkout-right">
+
+            <div className="checkout-summary">
+
+              <div className="summary-header">
+                <div>
+                  <span>SUMMARY</span>
+                  <h2>Order Summary</h2>
                 </div>
 
-              ))}
+                <ShoppingBag size={23} />
+              </div>
+
+              <div className="summary-row">
+                <span>Items</span>
+                <strong>{cartCount}</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Subtotal</span>
+                <strong>
+                  ₹{cartTotal}
+                </strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Delivery</span>
+                <strong className="free">
+                  FREE
+                </strong>
+              </div>
+
+              <div className="summary-line"></div>
+
+              <div className="summary-total">
+                <div>
+                  <span>Total Amount</span>
+                  <small>
+                    Inclusive of all charges
+                  </small>
+                </div>
+
+                <strong>
+                  ₹{cartTotal}
+                </strong>
+              </div>
+
+              <button
+                className="place-order-button"
+                onClick={handlePlaceOrder}
+                disabled={placingOrder}
+              >
+                {placingOrder
+                  ? "Placing Order..."
+                  : "Continue to Payment"}
+              </button>
+
+              <div className="secure-checkout">
+                <Lock size={16} />
+                Secure & encrypted checkout
+              </div>
 
             </div>
 
-          </section>
+            {/* Benefits */}
 
-          {/* PAYMENT */}
+            <div className="checkout-benefits">
 
-          <section className="checkout-card payment-card">
+              <div className="checkout-benefit">
 
-            <div className="checkout-card-title">
+                <div className="benefit-circle">
+                  <ShieldCheck size={21} />
+                </div>
 
-              <div>
+                <div>
+                  <strong>
+                    Secure Payment
+                  </strong>
 
-                <span>
-                  PAYMENT
-                </span>
-
-                <h2>
-                  Choose Payment Method
-                </h2>
+                  <span>
+                    Your payment information is protected.
+                  </span>
+                </div>
 
               </div>
 
-              <ShieldCheck
-                size={25}
-              />
+              <div className="checkout-benefit">
+
+                <div className="benefit-circle">
+                  <Truck size={21} />
+                </div>
+
+                <div>
+                  <strong>
+                    Reliable Delivery
+                  </strong>
+
+                  <span>
+                    Safe delivery across India.
+                  </span>
+                </div>
+
+              </div>
+
+              <div className="checkout-benefit">
+
+                <div className="benefit-circle">
+                  <CheckCircle size={21} />
+                </div>
+
+                <div>
+                  <strong>
+                    Quality Guaranteed
+                  </strong>
+
+                  <span>
+                    Professional printing quality.
+                  </span>
+                </div>
+
+              </div>
 
             </div>
 
-            <div className="payment-methods">
-
-              {paymentMethods.map(
-                (method) => {
-
-                  const Icon =
-                    method.icon;
-
-                  const selected =
-                    paymentMethod ===
-                    method.id;
-
-                  return (
-
-                    <button
-                      type="button"
-                      key={method.id}
-                      className={`payment-method ${
-                        selected
-                          ? "selected"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        setPaymentMethod(
-                          method.id
-                        )
-                      }
-                    >
-
-                      <div className="payment-icon">
-
-                        <Icon size={25} />
-
-                      </div>
-
-                      <div className="payment-info">
-
-                        <div className="payment-name">
-
-                          <strong>
-                            {method.title}
-                          </strong>
-
-                          <span className="payment-badge">
-                            {method.badge}
-                          </span>
-
-                        </div>
-
-                        <p>
-                          {
-                            method.description
-                          }
-                        </p>
-
-                      </div>
-
-                      <div
-                        className={`payment-radio ${
-                          selected
-                            ? "checked"
-                            : ""
-                        }`}
-                      >
-                        {selected && (
-                          <CheckCircle2
-                            size={18}
-                          />
-                        )}
-                      </div>
-
-                    </button>
-
-                  );
-                }
-              )}
-
-            </div>
-
-            {/* Selected payment message */}
-
-            <div className="payment-note">
-
-              {paymentMethod ===
-                "cod" && (
-                <>
-                  <Banknote
-                    size={19}
-                  />
-
-                  <span>
-                    You will pay
-                    <strong>
-                      {" "}₹
-                      {cartTotal}
-                    </strong>{" "}
-                    when your order is
-                    delivered.
-                  </span>
-                </>
-              )}
-
-              {paymentMethod ===
-                "card" && (
-                <>
-                  <CreditCard
-                    size={19}
-                  />
-
-                  <span>
-                    Card payment will
-                    be processed securely
-                    through our online
-                    payment gateway.
-                  </span>
-                </>
-              )}
-
-              {paymentMethod ===
-                "upi" && (
-                <>
-                  <Smartphone
-                    size={19}
-                  />
-
-                  <span>
-                    Pay securely using
-                    your preferred UPI
-                    application.
-                  </span>
-                </>
-              )}
-
-            </div>
-
-          </section>
+          </aside>
 
         </div>
-
-        {/* =========================
-            RIGHT SIDE
-        ========================= */}
-
-        <aside className="checkout-right">
-
-          <div className="checkout-summary">
-
-            <div className="summary-heading">
-
-              <span>
-                SUMMARY
-              </span>
-
-              <h2>
-                Order Summary
-              </h2>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Items
-              </span>
-
-              <strong>
-                {cartCount}
-              </strong>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Subtotal
-              </span>
-
-              <strong>
-                ₹{cartTotal}
-              </strong>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Delivery
-              </span>
-
-              <strong className="free">
-                FREE
-              </strong>
-
-            </div>
-
-            <div className="summary-divider"></div>
-
-            <div className="summary-total">
-
-              <div>
-
-                <span>
-                  Total Amount
-                </span>
-
-                <small>
-                  Inclusive of all charges
-                </small>
-
-              </div>
-
-              <strong>
-                ₹{cartTotal}
-              </strong>
-
-            </div>
-
-            <button
-              className="place-order-button"
-              onClick={handlePlaceOrder}
-              disabled={placingOrder}
-            >
-
-              {placingOrder
-                ? "Processing..."
-                : paymentMethod === "cod"
-                ? "Place Order"
-                : "Continue to Payment"}
-
-            </button>
-
-            <div className="secure-message">
-
-              <Lock size={16} />
-
-              <span>
-                Secure & encrypted
-                checkout
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* BENEFITS */}
-
-          <div className="checkout-benefits">
-
-            <div className="checkout-benefit">
-
-              <div className="benefit-small-icon">
-                <ShieldCheck
-                  size={20}
-                />
-              </div>
-
-              <div>
-
-                <strong>
-                  Secure Payment
-                </strong>
-
-                <span>
-                  Your payment information
-                  is protected.
-                </span>
-
-              </div>
-
-            </div>
-
-            <div className="checkout-benefit">
-
-              <div className="benefit-small-icon">
-                <Truck size={20} />
-              </div>
-
-              <div>
-
-                <strong>
-                  Reliable Delivery
-                </strong>
-
-                <span>
-                  Safe delivery across India.
-                </span>
-
-              </div>
-
-            </div>
-
-            <div className="checkout-benefit">
-
-              <div className="benefit-small-icon">
-                <CheckCircle2
-                  size={20}
-                />
-              </div>
-
-              <div>
-
-                <strong>
-                  Quality Guaranteed
-                </strong>
-
-                <span>
-                  Professional printing quality.
-                </span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </aside>
 
       </div>
 
